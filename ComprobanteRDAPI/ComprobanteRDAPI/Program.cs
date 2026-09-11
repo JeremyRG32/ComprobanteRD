@@ -15,7 +15,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ComprobanteRD API", Version = "v1" });
 
-    // 1. Definir el esquema de seguridad Bearer / JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Autenticación JWT usando el encabezado Bearer.\r\n\r\n" +
@@ -27,7 +26,6 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
-    // 2. Aplicar el esquema a todas las rutas protegidas en la UI
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -44,6 +42,18 @@ builder.Services.AddSwaggerGen(c =>
             },
             new List<string>()
         }
+    });
+});
+
+var allowedOrigins = builder.Configuration.GetValue<string>("allowedOrigins")!.Split(",");
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(optionsCORS =>
+    {
+        optionsCORS.WithOrigins(allowedOrigins)
+        .AllowAnyMethod()
+        .AllowAnyHeader();
     });
 });
 
