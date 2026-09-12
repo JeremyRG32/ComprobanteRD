@@ -25,8 +25,8 @@ namespace ComprobanteRDAPI.Controllers
             this.configuration = configuration;
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterDTO dto)
         {
             // Check if user already exists
             var existinguser = await userManager.FindByEmailAsync(dto.Email);
@@ -84,8 +84,8 @@ namespace ComprobanteRDAPI.Controllers
                 return StatusCode(500, $"Error interno durante el registro: {ex.Message}");
             }
         }
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromForm] LoginDTO dto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDTO dto)
         {
             // Check if user already exists
             var user = await userManager.FindByEmailAsync(dto.Email);
