@@ -1,33 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { VoucherService } from '../../services/voucher.service';
 import { VoucherDTO } from '../../models/voucher';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatTableModule, MatButtonModule, MatCardModule, CommonModule],
+  imports: [MatTableModule, MatButtonModule, MatCardModule, CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit {
-  ngOnInit(): void {
+export class Dashboard {
+  constructor() {
     this.loadVouchers();
   }
   private voucherService = inject(VoucherService);
+  displayedColumns: string[] = ['sentAt', 'customer', 'amount', 'status', 'accion'];
 
-  displayedColumns: string[] = ['fecha', 'cliente', 'monto', 'estado', 'acciones'];
   vouchers: VoucherDTO[] = [];
-  isLoading = true;
+
+  firstLetterUppercase(valor: string) {
+    if (!valor) return valor;
+    return valor.charAt(0).toUpperCase() + valor.slice(1);
+  }
 
   loadVouchers(): void {
-    this.isLoading = true;
     this.voucherService.getVouchers().subscribe({
       next: (data) => {
         this.vouchers = data;
-        this.isLoading = false;
       },
       error: (err) => {},
     });
