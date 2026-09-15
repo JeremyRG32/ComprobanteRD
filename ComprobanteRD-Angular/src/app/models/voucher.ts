@@ -7,7 +7,16 @@ export interface VoucherDTO {
   bankReferenceNumber: string;
   status: string;
   imageURL: string;
-  customer: CustomerDTO;
+  customerPhone: string;
+  customerName: string;
+}
+
+export interface DashboardDTO {
+  id: number;
+  sentAt: Date;
+  amount: number;
+  status: string;
+  customerName: string;
 }
 
 export interface RejectVoucherDTO {

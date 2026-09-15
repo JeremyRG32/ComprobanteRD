@@ -51,13 +51,13 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<VoucherDetailsDTO>> GetById(int id)
+        public async Task<ActionResult<VoucherDTO>> GetById(int id)
         {
             int companyId = GetCompanyId();
 
             var voucher = await context.Vouchers
                 .Where(v => v.CompanyId == companyId && v.Id == id)
-                .Select(v => new VoucherDetailsDTO
+                .Select(v => new VoucherDTO
                 {
                     Id = v.Id,
                     Amount = v.Amount,
