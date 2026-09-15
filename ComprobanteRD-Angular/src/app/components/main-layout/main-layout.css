@@ -1,0 +1,71 @@
+.sidebar {
+  width: 240px;
+  background: #0f1c2f;
+  color: #ffff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  height: 100vh;
+}
+
+mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 4px 8px 24px;
+}
+
+.brandicon {
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: #109288;
+  padding: 2px;
+}
+
+.navitem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  align-self: stretch;
+  box-sizing: border-box;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navitem:hover {
+  cursor: pointer;
+  color: #ffff;
+  background-color: #132540;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  color: #d0d4dc;
+  font-size: medium;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}

@@ -32,7 +32,7 @@ export class Login {
     let field = this.form.controls.email;
 
     if (field.hasError('required')) {
-      return 'el email es requerido';
+      return 'Este campo es requerido';
     }
 
     if (field.hasError('email')) {
@@ -46,7 +46,7 @@ export class Login {
     let field = this.form.controls.password;
 
     if (field.hasError('required')) {
-      return 'la contraseña es requerida';
+      return 'Este campo es requerido';
     }
 
     return '';
