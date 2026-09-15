@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
 import { RejectVoucherDTO, VoucherDTO } from '../models/voucher';
+import { Voucher } from '../components/voucher/voucher';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,10 @@ export class VoucherService {
 
   getVouchers(): Observable<VoucherDTO[]> {
     return this.http.get<VoucherDTO[]>(this.baseUrl);
+  }
+
+  getVoucherById(id: number): Observable<VoucherDTO> {
+    return this.http.get<VoucherDTO>(`${this.baseUrl}/${id}`);
   }
 
   confirmVoucher(id: number): Observable<any> {

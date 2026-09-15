@@ -30,32 +30,54 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<VoucherDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<DashboardDTO>>> GetAll()
         {
             int companyId = GetCompanyId();
 
             var vouchers = await context.Vouchers
                 .Where(v => v.CompanyId == companyId)
                 .OrderByDescending(v => v.SentAt)
-                .Select(v => new VoucherDTO
+                .Select(v => new DashboardDTO
                 {
                     Id = v.Id,
                     SentAt = v.SentAt,
                     Amount = v.Amount,
-                    BankReferenceNumber = v.BankReferenceNumber,
-                    ImageURL = v.ImageUrl,
                     Status = v.Status,
-                    Customer = new CustomerDTO
-                    {
-                        Id = v.Customer != null ? v.Customer.Id : 0,
-                        CustomerName = v.Customer != null ? v.Customer.CustomerName : "Unknown",
-                        PhoneNumber = v.Customer != null ? v.Customer.WhatsAppPhone : string.Empty
-                    }
+                    CustomerName = v.Customer!.CustomerName,
                 })
                 .ToListAsync();
 
             return Ok(vouchers);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<VoucherDetailsDTO>> GetById(int id)
+        {
+            int companyId = GetCompanyId();
+
+            var voucher = await context.Vouchers
+                .Where(v => v.CompanyId == companyId && v.Id == id)
+                .Select(v => new VoucherDetailsDTO
+                {
+                    Id = v.Id,
+                    Amount = v.Amount,
+                    BankReferenceNumber = v.BankReferenceNumber,
+                    CustomerName = v.Customer!.CustomerName,
+                    CustomerPhone = v.Customer.WhatsAppPhone,
+                    ImageURL = v.ImageUrl,
+                    SentAt = v.SentAt,
+                    Status = v.Status,
+                })
+                .FirstOrDefaultAsync();
+
+            if (voucher is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(voucher);
+        }
+
         [HttpPost("{id}/confirm")]
         public async Task<ActionResult> Confirm(int id)
         {
