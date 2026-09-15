@@ -1,0 +1,49 @@
+<div class="header">
+  <mat-icon class="back-arrow">arrow_back</mat-icon>
+
+  <div class="header-text">
+    <h2>Detalle de Comprobante</h2>
+    <span>ID: {{ id }} • Recibido via +{{ voucher.customerPhone }}</span>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card image-card">
+    <div class="img">
+      <img src="landscape-placeholder.svg" />
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Datos</h2>
+
+    <mat-form-field [formGroup]="form">
+      <mat-label>Monto Extraido (RD$)</mat-label>
+      <input matInput [formControl]="form.controls.amount" />
+      <mat-error>{{ getAmountError() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field [formGroup]="form">
+      <mat-label>No. Referencia Bancaria</mat-label>
+      <input matInput [formControl]="form.controls.bankReferenceNumber" />
+      <mat-error>{{ getReferenceError() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field [formGroup]="form">
+      <mat-label>Nombre del Cliente</mat-label>
+      <input matInput [formControl]="form.controls.customerName" />
+      <mat-error>{{ getNameError() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field [formGroup]="form">
+      <mat-label>WhatsApp del Cliente</mat-label>
+      <input matInput [formControl]="form.controls.customerPhone" />
+      <mat-error>{{ getPhoneError() }}</mat-error>
+    </mat-form-field>
+
+    <div class="actions">
+      <button matButton="outlined">Rechazar Pago</button>
+      <button class="confirm" matButton="filled">Confirmar Pago</button>
+    </div>
+  </div>
+</div>
