@@ -1,84 +1,89 @@
-<h1>Panel de Monitoreo</h1>
-
-<div class="cards">
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Comprobantes Hoy</span>
-      <span class="dot-teal">•</span>
-    </div>
-    <div class="card-body">
-      <h2>10</h2>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Pendientes por verificar</span>
-      <span class="dot-yellow">•</span>
-    </div>
-    <div class="card-body">
-      <h2>10</h2>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Confirmados hoy</span>
-      <span class="dot-teal">•</span>
-    </div>
-    <div class="card-body">
-      <h2>10</h2>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Rechazados hoy</span>
-      <span class="dot-red">•</span>
-    </div>
-    <div class="card-body">
-      <h2>10</h2>
-    </div>
-  </div>
-</div>
-
 <div>
-  <table mat-table [dataSource]="vouchers">
-    <!-- 1. Date -->
-    <ng-container matColumnDef="sentAt">
-      <th mat-header-cell *matHeaderCellDef>Fecha y Hora</th>
-      <td mat-cell *matCellDef="let v">{{ v.sentAt | date: 'medium' }}</td>
-    </ng-container>
+  <h1>Panel de Monitoreo</h1>
 
-    <!-- 2. Customer Name -->
-    <ng-container matColumnDef="customer">
-      <th mat-header-cell *matHeaderCellDef>Cliente</th>
-      <td mat-cell *matCellDef="let v">{{ v.customer?.name }}</td>
-    </ng-container>
+  <div class="cards">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Comprobantes Hoy</span>
+        <span class="dot-teal">•</span>
+      </div>
+      <div class="card-body">
+        <h2>10</h2>
+      </div>
+    </div>
 
-    <!-- 3. Amount -->
-    <ng-container matColumnDef="amount">
-      <th mat-header-cell *matHeaderCellDef>Monto</th>
-      <td mat-cell *matCellDef="let v">RD$ {{ v.amount | number: '1.2-2' }}</td>
-    </ng-container>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Pendientes por verificar</span>
+        <span class="dot-yellow">•</span>
+      </div>
+      <div class="card-body">
+        <h2>10</h2>
+      </div>
+    </div>
 
-    <!-- 4. Status -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Estado</th>
-      <td mat-cell *matCellDef="let v">
-        {{ v.status }}
-      </td>
-    </ng-container>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Confirmados hoy</span>
+        <span class="dot-teal">•</span>
+      </div>
+      <div class="card-body">
+        <h2>10</h2>
+      </div>
+    </div>
 
-    <!-- 5. Actions -->
-    <ng-container matColumnDef="accion">
-      <th mat-header-cell *matHeaderCellDef>Acción</th>
-      <td mat-cell *matCellDef="let v">
-        <a routerLink="/voucher/{{ v.id }}" mat-flat-button> Ver Detalle </a>
-      </td>
-    </ng-container>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Rechazados hoy</span>
+        <span class="dot-red">•</span>
+      </div>
+      <div class="card-body">
+        <h2>10</h2>
+      </div>
+    </div>
+  </div>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+  <div class="cardtable">
+    <h2>Comprobantes Recbidos</h2>
+    <table mat-table [dataSource]="vouchers">
+      <!-- 1. Date -->
+      <ng-container matColumnDef="sentAt">
+        <th mat-header-cell *matHeaderCellDef>Fecha y Hora</th>
+        <td mat-cell *matCellDef="let v">{{ v.sentAt | date: 'short' }}</td>
+      </ng-container>
+
+      <!-- 2. Customer Name -->
+      <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td class="name" mat-cell *matCellDef="let v">{{ v.customerName }}</td>
+      </ng-container>
+
+      <!-- 3. Amount -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Monto</th>
+        <td mat-cell *matCellDef="let v">RD$ {{ v.amount | number: '1.2-2' }}</td>
+      </ng-container>
+
+      <!-- 4. Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let v">
+          {{ v.status }}
+        </td>
+      </ng-container>
+
+      <!-- 5. Actions -->
+      <ng-container matColumnDef="accion">
+        <th mat-header-cell *matHeaderCellDef>Acción</th>
+        <td mat-cell *matCellDef="let v">
+          <a class="detailbutton" routerLink="/voucher/{{ v.id }}" matButton="outlined">
+            Ver Detalle
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
 </div>
