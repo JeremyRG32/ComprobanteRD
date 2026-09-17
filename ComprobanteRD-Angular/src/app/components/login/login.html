@@ -1,19 +1,41 @@
-<h2>Iniciar Sesion</h2>
+<div class="background">
+  <div class="card">
+    <div class="brandicon">C</div>
 
-<form (submit)="onSubmit()" [formGroup]="form">
-  <mat-form-field appearance="outline">
-    <mat-label>Email</mat-label>
-    <input matInput [formControl]="form.controls.email" />
-    <mat-error>{{ getEmailErrors() }}</mat-error>
-  </mat-form-field>
+    <div class="brandinfo">
+      <span class="span-1">ComprobanteRD</span>
+      <span class="subtitle">Verficacion de pagos instanténea para PyMEs</span>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Password</mat-label>
-    <input matInput [formControl]="form.controls.password" />
-    <mat-error>{{ getPasswordErrors() }}</mat-error>
-  </mat-form-field>
+    <form (submit)="onSubmit()" [formGroup]="form">
+      <app-show-error [error]="error"></app-show-error>
 
-  <div class="buttons-container">
-    <button mat-flat-button type="submit" [disabled]="form.invalid">{{ 'Iniciar Sesion' }}</button>
+      <mat-form-field appearance="outline">
+        <mat-label>Correo Electrónico</mat-label>
+        <input matInput [formControl]="form.controls.email" />
+        <mat-icon matIconPrefix>mail</mat-icon>
+        <mat-error>{{ getEmailErrors() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          [type]="hidePassword ? 'password' : 'text'"
+          [formControl]="form.controls.password"
+        />
+        <mat-icon matIconPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error>{{ getPasswordErrors() }}</mat-error>
+      </mat-form-field>
+
+      <div class="actions">
+        <button class="confirm button" mat-flat-button type="submit">
+          {{ 'Iniciar Sesion' }}
+        </button>
+      </div>
+    </form>
   </div>
-</form>
+</div>

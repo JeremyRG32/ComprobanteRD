@@ -7,10 +7,21 @@ import { LoginDTO } from '../../models/auth';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { getIdentityErrors } from '../../shared/functions/get-error';
+import { ShowError } from '../../shared/components/show-error/show-error';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatButtonModule, MatInputModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    ShowError,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -18,8 +29,9 @@ export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
+  hidePassword = true;
 
-  errors: string[] = [];
+  error!: string;
 
   // Form Creation
   form = this.formBuilder.group({
@@ -63,7 +75,11 @@ export class Login {
       next: (response) => {
         this.router.navigate(['/dashboard']);
       },
-      error: (err) => {},
+      error: (err) => {
+        const errors = getIdentityErrors(err);
+        this.error = errors;
+        console.log(err);
+      },
     });
   }
 }

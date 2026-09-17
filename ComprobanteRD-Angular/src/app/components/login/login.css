@@ -1,0 +1,84 @@
+.background {
+  width: 100vw;
+  height: 100vh;
+  background-color: #101d30;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background-color: white;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  padding: 40px 32px 28px;
+  text-align: center;
+  box-shadow: 0 20px 50px #00000059;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+button[mat-flat-button]:disabled {
+  color: rgb(220, 205, 205);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.brandicon {
+  color: white;
+  font-weight: bolder;
+  justify-content: center;
+  margin-bottom: 15px;
+  height: 48px;
+  width: 48px;
+  border-radius: 12px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #109288;
+  padding: 2px;
+  margin: 0 auto 18px;
+}
+
+.confirm {
+  background-color: #0c9488 !important;
+  color: white;
+  height: 3rem;
+  font-size: large;
+}
+
+mat-form-field {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.brandinfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.span-1 {
+  font-size: 24px;
+  color: #0f1b2e;
+  font-weight: 900;
+  margin-bottom: 5px;
+}
+
+/* Gets rid of duplicate hide password button */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+  display: none;
+}
+input[type='password']::-webkit-credentials-auto-fill-button,
+input[type='password']::-webkit-caps-lock-indicator {
+  display: none;
+}
