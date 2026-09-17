@@ -5,27 +5,27 @@
   </div>
 
   <nav class="nav">
-    <a class="navitem">
+    <a class="navitem" routerLink="/dashboard" routerLinkActive="active">
       <mat-icon>dashboard</mat-icon>
       <span>Dashboard</span>
     </a>
 
-    <a class="navitem">
+    <a class="navitem" routerLink="/historial" routerLinkActive="active">
       <mat-icon>access_time</mat-icon>
       <span>Historial</span>
     </a>
 
-    <a class="navitem">
+    <a class="navitem" routerLink="/customers" routerLinkActive="active">
       <mat-icon>group</mat-icon>
       <span>Clientes</span>
     </a>
 
-    <a class="navitem">
+    <a class="navitem" routerLink="/settings" routerLinkActive="active">
       <mat-icon>settings</mat-icon>
       <span>Configuracion</span>
     </a>
 
-    <a class="navitem">
+    <a class="navitem" routerLink="/users" routerLinkActive="active">
       <mat-icon>manage_accounts</mat-icon>
       <span>Usuarios</span>
     </a>
@@ -34,8 +34,17 @@
 
 <div class="main">
   <header class="topbar">
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem distinctio magnam molestiae
-    ratione exercitationem quam sit, officia laborum omnis delectus. Quidem distinctio, nulla quis
-    quasi ex obcaecati enim iusto officiis.
+    <div class="spacer"></div>
+
+    <div class="userinfo">
+      <div class="username">Nombre Usuario</div>
+      <div class="role">Auditor</div>
+    </div>
+
+    <a (click)="logout()">
+      <mat-icon class="logout">logout</mat-icon>
+    </a>
   </header>
+
+  <div class="content"><router-outlet></router-outlet></div>
 </div>
