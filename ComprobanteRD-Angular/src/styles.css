@@ -2,3 +2,24 @@
 .buttons-container {
   margin-top: 1rem;
 }
+
+button {
+  flex: 1;
+  height: 50px;
+  font-size: larger;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 15px;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}

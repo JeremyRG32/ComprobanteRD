@@ -1,0 +1,6 @@
+ul {
+  color: rgb(208, 14, 14);
+  align-items: start;
+  display: flex;
+  font-weight: 500;
+}
