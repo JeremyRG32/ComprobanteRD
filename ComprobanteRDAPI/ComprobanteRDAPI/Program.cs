@@ -1,5 +1,6 @@
 using ComprobanteRDAPI.Data;
 using ComprobanteRDAPI.Models;
+using ComprobanteRDAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -68,6 +69,12 @@ builder.Services.AddIdentityCore<User>()
 .AddDefaultTokenProviders();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient<WhatsAppSenderService>(c =>
+    c.DefaultRequestHeaders.Authorization =
+        new("Bearer", builder.Configuration["WhatsAppSettings:AccessToken"]));
+
+builder.Services.AddHttpClient<IMediaStorageService, MediaStorageService>();
 
 builder.Services.AddScoped<UserManager<User>>();
 builder.Services.AddScoped<SignInManager<User>>();
@@ -113,6 +120,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
