@@ -9,6 +9,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatAnchor, MatButtonModule } from '@angular/material/button';
 import { Location } from '@angular/common';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-voucher',
@@ -27,8 +28,7 @@ import { Location } from '@angular/common';
 })
 export class Voucher implements OnInit {
   ngOnInit(): void {
-    this.loadVouchers();
-    console.log(this.id);
+    this.loadVoucher();
   }
 
   @Input({ transform: numberAttribute })
@@ -45,16 +45,19 @@ export class Voucher implements OnInit {
     customerName: ['', { validators: [Validators.required] }],
     customerPhone: [
       '',
-      { validators: [Validators.required, Validators.pattern('^(809|829|849)[2-9]\d{6}$')] },
+      { validators: [Validators.required, Validators.pattern(/^1(809|829|849)[2-9]\d{6}$/)] },
     ],
   });
 
   voucher!: VoucherDTO;
 
-  loadVouchers(): void {
+  loadVoucher(): void {
     this.voucherService.getVoucherById(this.id).subscribe({
       next: (data) => {
         this.voucher = data;
+        this.voucher.imageURL = environment.imageURL + this.voucher.imageURL;
+        this.form.controls.customerPhone.setValue(this.voucher.customerPhone);
+        this.form.controls.customerName.setValue(this.voucher.customerName);
       },
       error: (err) => {},
     });
