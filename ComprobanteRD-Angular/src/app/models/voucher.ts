@@ -1,5 +1,3 @@
-import { CustomerDTO } from './customer';
-
 export interface VoucherDTO {
   id: number;
   sentAt: Date;

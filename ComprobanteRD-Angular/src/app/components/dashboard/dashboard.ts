@@ -6,6 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { VoucherService } from '../../services/voucher.service';
 import { VoucherDTO } from '../../models/voucher';
 import { RouterLink } from '@angular/router';
+import { isToday } from 'date-fns';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,24 @@ export class Dashboard {
 
   vouchers: VoucherDTO[] = [];
 
+  recibidos = 0;
+  pendientes = 0;
+  confirmados = 0;
+  rechazados = 0;
+
+  loadCards() {
+    this.recibidos = this.vouchers.filter((v) => isToday(new Date(v.sentAt))).length;
+    this.pendientes = this.vouchers.filter(
+      (v) => v.status.toLowerCase() == 'pending' && isToday(new Date(v.sentAt)),
+    ).length;
+    this.confirmados = this.vouchers.filter(
+      (v) => v.status.toLowerCase() == 'approved' && isToday(new Date(v.sentAt)),
+    ).length;
+    this.rechazados = this.vouchers.filter(
+      (v) => v.status.toLowerCase() == 'rejected' && isToday(new Date(v.sentAt)),
+    ).length;
+  }
+
   firstLetterUppercase(valor: string) {
     if (!valor) return valor;
     return valor.charAt(0).toUpperCase() + valor.slice(1);
@@ -31,6 +50,7 @@ export class Dashboard {
     this.voucherService.getVouchers().subscribe({
       next: (data) => {
         this.vouchers = data;
+        this.loadCards();
       },
       error: (err) => {},
     });

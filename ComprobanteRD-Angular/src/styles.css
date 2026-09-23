@@ -23,3 +23,44 @@ body {
 a {
   text-decoration: none;
 }
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.text-green {
+  color: #0d9488;
+}
+
+table {
+  background-color: transparent !important;
+}
+
+table .mat-mdc-row {
+  height: 60px;
+}
+
+table .mat-mdc-header-cell,
+table .mat-mdc-cell {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.244) !important; /* Adjust thickness, style (solid/dashed/dotted), and color */
+}
+
+.bold {
+  font-weight: bolder;
+}
+
+th {
+  font-weight: bolder !important;
+  color: #57616d;
+}
+td {
+  font-size: 1rem;
+}
+
+.detailbutton {
+  height: 48px;
+  border-radius: 5px !important;
+  color: #2b9c87 !important;
+  border-color: #42ae9b !important;
+}

@@ -1,0 +1,60 @@
+<div class="header-text">
+  <h1>Directorio de Clientes</h1>
+  <span>Registro consolidado de clientes que envían comprobantes por WhatsApp</span>
+</div>
+
+<div class="cards">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Clientes Únicos Registrados</span>
+    </div>
+    <div class="card-body">
+      <h1>{{ customerCount }}</h1>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Volumen de Transacciones Recibidas</span>
+    </div>
+    <div class="card-body text-green">
+      <h1>RD$ {{ transactionVolume | number: '1.2-2' }}</h1>
+    </div>
+  </div>
+</div>
+
+<div class="cardtable">
+  <table mat-table [dataSource]="customers">
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef>Nombre del Cliente</th>
+      <td class="bold" mat-cell *matCellDef="let c">{{ c.customerName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="phoneNumber">
+      <th *matHeaderCellDef mat-header-cell>Teléfono WhatsApp</th>
+      <td mat-cell *matCellDef="let c">{{ c.phoneNumber | phone: 'international' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalTransactions">
+      <th mat-header-cell *matHeaderCellDef>Total Transacciones</th>
+      <td mat-cell *matCellDef="let c">{{ c.totalTransactions }} Transacciones</td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th *matHeaderCellDef mat-header-cell>Monto Acumulado</th>
+      <td class="bold" mat-cell *matCellDef="let c">RD$ {{ c.amount | number: '1.2-2' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="historial">
+      <th *matHeaderCellDef mat-header-cell>Historial</th>
+      <td mat-cell *matCellDef="let c">
+        <a class="detailbutton" routerLink="/customer/{{ c.id }}" matButton="outlined">
+          Ver Detalle
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColums"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: displayedColums"></tr>
+  </table>
+</div>
