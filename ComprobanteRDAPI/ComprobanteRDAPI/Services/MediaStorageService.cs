@@ -1,5 +1,4 @@
-﻿
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace ComprobanteRDAPI.Services
@@ -76,6 +75,20 @@ namespace ComprobanteRDAPI.Services
 
             // Return the path for the frontend
             return $"/uploads/vouchers/{fileName}";
+        }
+
+        public async Task<string> SaveReceiptPdfAsync(Stream pdfStream, string fileName)
+        {
+            var uploadsFolder = Path.Combine(env.WebRootPath ?? Path.Combine(Directory.
+                GetCurrentDirectory(), "wwwroot"), "uploads", "receipts");
+
+            Directory.CreateDirectory(uploadsFolder);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            await using var fs = File.Create(filePath);
+            await pdfStream.CopyToAsync(fs);
+
+            return $"/uploads/receipts/{fileName}";
         }
     }
 }
