@@ -1,0 +1,56 @@
+<div class="header">
+  <div class="header-text">
+    <h2>Recibo</h2>
+    <span>ID: {{ receiptData.receiptNumber }} • Generado con éxito</span>
+  </div>
+
+  <div class="header-actions">
+    <button class="button" matButton="outlined">
+      <mat-icon>file_download</mat-icon> Descargar PDF
+    </button>
+    <button (click)="goBack()" class="confirm button" matButton="filled">Cerrar vista</button>
+  </div>
+</div>
+
+<div #receipt class="shadow-background">
+  <div class="card">
+    <div class="reciept-header">
+      <div class="brand-data">
+        <div class="brandicon">C</div>
+        <div>
+          <strong>{{ receiptData.companyName }}</strong>
+          <div class="muted">RNC: {{ receiptData.companyRnc }}</div>
+        </div>
+      </div>
+      <div class="brand-address">
+        <div>{{ receiptData.companyAddress }}Direcion prueba</div>
+        <div>{{ receiptData.companyPhone }}numero prueba</div>
+      </div>
+    </div>
+    <div class="receipt-info">
+      <div class="info-row">
+        <div class="label">NÚMERO RECIBO</div>
+        <div class="value">{{ receiptData.receiptNumber }}</div>
+      </div>
+      <div class="info-row">
+        <div class="label right">FECHA Y HORA</div>
+        <div class="value">{{ receiptData.issuedAt | date: 'medium' }}</div>
+      </div>
+    </div>
+    <div class="client-data">
+      <div>
+        <div class="label">Nombre del Cliente</div>
+        <div class="value">{{ receiptData.customerName }}</div>
+      </div>
+
+      <div>
+        <div class="label">Numero del Cliente</div>
+        <div class="value">{{ receiptData.customerPhone | phone }}</div>
+      </div>
+    </div>
+    <div class="amount-box">
+      <span class="label">Monto Pagado</span>
+      <span class="amount">RD$ {{ receiptData.amount | number: '1.2-2' }}</span>
+    </div>
+  </div>
+</div>
