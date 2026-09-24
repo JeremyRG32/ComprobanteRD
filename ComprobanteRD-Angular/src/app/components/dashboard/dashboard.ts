@@ -28,11 +28,10 @@ export class Dashboard {
   confirmados = 0;
   rechazados = 0;
 
+  // TO DO ELIMINATE APPROVED AND DECLINED CARDS
   loadCards() {
     this.recibidos = this.vouchers.filter((v) => isToday(new Date(v.sentAt))).length;
-    this.pendientes = this.vouchers.filter(
-      (v) => v.status.toLowerCase() == 'pending' && isToday(new Date(v.sentAt)),
-    ).length;
+    this.pendientes = this.vouchers.filter((v) => v.status.toLowerCase() == 'pending').length;
     this.confirmados = this.vouchers.filter(
       (v) => v.status.toLowerCase() == 'approved' && isToday(new Date(v.sentAt)),
     ).length;
@@ -52,13 +51,6 @@ export class Dashboard {
         this.vouchers = data;
         this.loadCards();
       },
-      error: (err) => {},
-    });
-  }
-
-  onConfirm(id: number): void {
-    this.voucherService.confirmVoucher(id).subscribe({
-      next: () => this.loadVouchers(),
       error: (err) => {},
     });
   }
