@@ -1,6 +1,7 @@
 ﻿using ComprobanteRDAPI.Data;
 using ComprobanteRDAPI.DTOs;
 using ComprobanteRDAPI.Models;
+using ComprobanteRDAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,14 @@ namespace ComprobanteRDAPI.Controllers
     public class VoucherController : Controller
     {
         private readonly AppDbContext context;
+        private readonly WhatsAppSenderService sender;
 
-        public VoucherController(AppDbContext context)
+        public VoucherController(AppDbContext context, WhatsAppSenderService sender)
         {
             this.context = context;
+            this.sender = sender;
         }
+
 
         private int GetCompanyId()
         {
@@ -79,7 +83,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpPost("{id}/confirm")]
-        public async Task<ActionResult> Confirm(int id)
+        public async Task<IActionResult> Confirm(int id, ConfirmVoucherDTO confirmVoucherDTO)
         {
             int companyId = GetCompanyId();
 
@@ -87,65 +91,76 @@ namespace ComprobanteRDAPI.Controllers
                 .Include(v => v.Customer)
                 .FirstOrDefaultAsync(v => v.Id == id && v.CompanyId == companyId);
 
-            if (voucher == null)
+            if (voucher is null)
             {
-                return NotFound(new { message = "Comprobante no encontrado." });
+                return NotFound();
             }
 
-            if (voucher.Status == "Confirmado")
+            if (voucher.Status != "Pending")
             {
-                return BadRequest(new { message = "Este comprobante ya fue confirmado previamente." });
+                return BadRequest(new { message = $"No se puede confirmar un comprobante en estado '{voucher.Status}'." });
             }
 
-            voucher.Status = "Confirmado";
+            if (string.IsNullOrWhiteSpace(voucher.Customer?.WhatsAppPhone))
+            {
+                return BadRequest(new { message = $"El cliente '{voucher.Customer?.CustomerName}' no tiene un número de WhatsApp registrado." });
+            }
+
+            voucher.Status = "Approved";
+            voucher.Amount = confirmVoucherDTO.Amount;
+            voucher.BankReferenceNumber = confirmVoucherDTO.BankReferenceNumber;
 
             var receipt = new Receipt
             {
-
                 VoucherId = voucher.Id,
-                ReceiptNumber = $"REC-{DateTime.UtcNow:yyyyMMdd}-{voucher.Id:D4}",
+                ReceiptNumber = $"REC-{DateTime.UtcNow:yyyyMMdd}-{voucher.Id}",
                 IssuedAt = DateTime.UtcNow,
-                SentViaWhatsApp = false // Will be true when the Whatsapp api send the message
+                SentViaWhatsApp = true
             };
 
-            context.Receipts.Add(receipt);
+            await context.Receipts.AddAsync(receipt);
             await context.SaveChangesAsync();
 
+            await sender.SendTextAsync(voucher.Customer.WhatsAppPhone, "Su pago ha sido confirmado exitosamente ✅");
             return Ok(new
             {
-                message = "Comprobante confirmado exitosamente.",
-                receiptNumber = receipt.ReceiptNumber,
-                status = voucher.Status
+                message = "Pago confirmado exitosamente.",
+                receiptNumber = receipt.ReceiptNumber
             });
         }
 
         [HttpPost("{id}/reject")]
-        public async Task<IActionResult> Reject(int id, [FromBody] RejectVoucherDTO dto)
+        public async Task<IActionResult> Reject(int id, RejectVoucherDTO dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             int companyId = GetCompanyId();
 
-            // 1. Buscar el comprobante asegurando pertenencia al tenant
             var voucher = await context.Vouchers
+                .Include(v => v.Customer)
                 .FirstOrDefaultAsync(v => v.Id == id && v.CompanyId == companyId);
 
-            if (voucher == null)
+            if (voucher is null)
             {
-                return NotFound(new { message = "Comprobante no encontrado o no pertenece a su empresa." });
+                return NotFound();
             }
 
-            if (voucher.Status == "Rechazado")
+            if (voucher.Status != "Pending")
             {
-                return BadRequest(new { message = "Este comprobante ya se encuentra rechazado." });
+                return BadRequest(new { message = $"No se puede rechazar un comprobante en estado '{voucher.Status}'." });
             }
 
-            // 2. Actualizar estado
-            voucher.Status = "Rechazado";
+            if (string.IsNullOrWhiteSpace(voucher.Customer?.WhatsAppPhone))
+            {
+                return BadRequest(new { message = $"El cliente '{voucher.Customer?.CustomerName}' no tiene un número de WhatsApp registrado." });
+            }
+
+            voucher.Status = "Rejected";
             await context.SaveChangesAsync();
+
+            var message = $"Hola {voucher.Customer.CustomerName}, tu comprobante no pudo ser aprobado ❌.\n\n" +
+                  $"Motivo: {dto.Reason}\n\n" +
+                  $"Por favor, repite el proceso enviando una nueva captura válida.";
+
+            await sender.SendTextAsync(voucher.Customer.WhatsAppPhone, message);
 
             return Ok(new
             {
