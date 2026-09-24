@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
-import { RejectVoucherDTO, VoucherDTO } from '../models/voucher';
+import { ConfirmVoucherDTO, RejectVoucherDTO, VoucherDTO } from '../models/voucher';
 import { Voucher } from '../components/voucher/voucher';
 
 @Injectable({
@@ -20,8 +20,8 @@ export class VoucherService {
     return this.http.get<VoucherDTO>(`${this.baseUrl}/${id}`);
   }
 
-  confirmVoucher(id: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/${id}/confirm`, {});
+  confirmVoucher(id: number, confirmVoucherDTO: ConfirmVoucherDTO): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${id}/confirm`, confirmVoucherDTO);
   }
 
   rejectVoucher(id: number, rejectVoucherDTO: RejectVoucherDTO): Observable<any> {

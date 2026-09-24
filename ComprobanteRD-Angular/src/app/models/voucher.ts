@@ -18,5 +18,10 @@ export interface DashboardDTO {
 }
 
 export interface RejectVoucherDTO {
-  Reason: string;
+  reason: string;
+}
+
+export interface ConfirmVoucherDTO {
+  amount: number;
+  bankReferenceNumber: string;
 }

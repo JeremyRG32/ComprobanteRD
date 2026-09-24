@@ -1,15 +1,28 @@
 export function getErrors(obj: any): string[] {
-  const err = obj.error.errors;
+  const body = obj?.error;
+  const err = body?.errors;
 
-  let errorMessage: string[] = [];
-
-  for (let key in err) {
-    let field = key;
-    const messageField = err[key].map((mensaje: string) => `${field}: ${mensaje}`);
-    errorMessage = errorMessage.concat(messageField);
+  // Validation errors: { errors: { Field: ["msg1", "msg2"] } }
+  if (err) {
+    let errorMessage: string[] = [];
+    for (let key in err) {
+      const messageField = err[key].map((message: string) => `${key}: ${message}`);
+      errorMessage = errorMessage.concat(messageField);
+    }
+    return errorMessage;
   }
 
-  return errorMessage;
+  // Business rule errors: { message: "..." }
+  if (body?.message) {
+    return [body.message];
+  }
+
+  // Plain string body
+  if (typeof body === 'string') {
+    return [body];
+  }
+
+  return ['Ocurrió un error inesperado.'];
 }
 
 export function getIdentityErrors(obj: any): string {
