@@ -3,6 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { AuthResponseDTO, LoginDTO } from '../models/auth';
 import { Observable, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedToken {
+  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'?: string;
+  name?: string;
+  unique_name?: string;
+  exp?: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +30,38 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('Token');
+    return localStorage.getItem('token');
+  }
+
+  // Decode the token payload
+  getDecodedToken(): DecodedToken | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return jwtDecode<DecodedToken>(token);
+    } catch (error) {
+      console.error('Invalid token', error);
+      return null;
+    }
+  }
+
+  // Access the name claim specifically
+  getUserFullName(): string | null {
+    const token = this.getToken();
+    console.log('Raw Token:', token);
+
+    const decoded = this.getDecodedToken();
+    console.log('Decoded Payload:', decoded);
+
+    if (!decoded) return null;
+
+    return (
+      decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ||
+      decoded.name ||
+      decoded.unique_name ||
+      null
+    );
   }
 
   logout(): void {
