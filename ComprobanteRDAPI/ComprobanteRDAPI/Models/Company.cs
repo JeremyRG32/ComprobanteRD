@@ -8,6 +8,7 @@
         public string? TaxId { get; set; }
         public string? CommercialSector { get; set; }
         public string BusinessWhatsAppNumber { get; set; } = string.Empty;
+        public string? WhatsAppPhoneNumberId { get; set; }
         public string? ContactEmail { get; set; }
         public string? Address { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
