@@ -39,7 +39,7 @@ namespace ComprobanteRDAPI.Controllers
             int companyId = GetCompanyId();
 
             var vouchers = await context.Vouchers
-                .Where(v => v.CompanyId == companyId)
+                .Where(v => v.CompanyId == companyId && v.Status != "Approved")
                 .OrderByDescending(v => v.SentAt)
                 .Select(v => new DashboardDTO
                 {
@@ -80,6 +80,28 @@ namespace ComprobanteRDAPI.Controllers
             }
 
             return Ok(voucher);
+        }
+
+        [HttpGet("transactions")]
+        public async Task<ActionResult<TransactionHistoryDTO>> GetTransactions()
+        {
+            int companyId = GetCompanyId();
+
+            var transactions = await context.Vouchers
+                .Where(v => v.CompanyId == companyId && v.Status != "Pending")
+                .OrderByDescending(v => v.SentAt)
+                .Select(v => new TransactionHistoryDTO
+                {
+                    SentAt = v.SentAt,
+                    VoucherId = v.Id,
+                    Status = v.Status,
+                    Amount = v.Amount,
+                    CustomerName = v.Customer!.CustomerName,
+                    BankReferenceNumber = v.BankReferenceNumber!,
+                })
+                .ToListAsync();
+
+            return Ok(transactions);
         }
 
         [HttpPost("{id}/confirm")]

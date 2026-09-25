@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
 import { ConfirmVoucherDTO, RejectVoucherDTO, VoucherDTO } from '../models/voucher';
 import { Voucher } from '../components/voucher/voucher';
+import { TransactionDTO } from '../models/transaction';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,10 @@ export class VoucherService {
 
   getVoucherById(id: number): Observable<VoucherDTO> {
     return this.http.get<VoucherDTO>(`${this.baseUrl}/${id}`);
+  }
+
+  getTransactions(): Observable<TransactionDTO[]> {
+    return this.http.get<TransactionDTO[]>(`${this.baseUrl}/transactions`);
   }
 
   confirmVoucher(id: number, confirmVoucherDTO: ConfirmVoucherDTO): Observable<any> {
