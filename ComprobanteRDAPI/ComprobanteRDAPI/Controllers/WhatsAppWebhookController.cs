@@ -27,6 +27,20 @@ namespace ComprobanteRDAPI.Controllers
             this.mediaStorage = mediaStorage;
         }
 
+        private async Task<int> ResolveCompanyIdAsync(JsonElement value)
+        {
+            var phoneNumberId = value.GetProperty("metadata").GetProperty("phone_number_id").GetString();
+            if (phoneNumberId == null)
+            {
+                return -1; // -1 means not found here
+            }
+
+            return await context.Companies
+                .Where(c => c.WhatsAppPhoneNumberId == phoneNumberId)
+                .Select(c => (int)c.Id)
+                .FirstOrDefaultAsync();
+        }
+
         [HttpGet]
         public IActionResult VerifyWebhook(
             [FromQuery(Name = "hub.mode")] string? mode,
@@ -95,10 +109,15 @@ namespace ComprobanteRDAPI.Controllers
                             senderName = nameProp.GetString() ?? from;
                         }
 
-                        // TEST COMPANY ID CHANGE WHEN THERE ARE MULTIPLE COMPANIES
-                        int targetCompanyId = 8;
+                        // TEST COMPANY
+                        var targetCompanyId = await ResolveCompanyIdAsync(value);
+                        if (targetCompanyId == -1)
+                        {
+                            Console.WriteLine("[WARN] Webhook received for unknown phone_number_id");
+                            return Ok(); // acknowledge to Meta but don't process
+                        }
 
-                        // 1. Upsert Customer
+                        // Upsert Customer
                         var customer = await context.Customers
                             .FirstOrDefaultAsync(c => c.CompanyId == targetCompanyId && c.WhatsAppPhone == from);
 
@@ -114,7 +133,8 @@ namespace ComprobanteRDAPI.Controllers
                             await context.SaveChangesAsync();
                         }
 
-                        // 2. Insert Voucher
+
+                        // Insert Voucher
                         var voucher = new Voucher
                         {
                             CompanyId = targetCompanyId,
@@ -131,7 +151,7 @@ namespace ComprobanteRDAPI.Controllers
 
                         Console.WriteLine($"[SUCCESS] Voucher #{voucher.Id} created for Customer #{customer.Id}");
 
-                        // 3. Clear state and confirm to the customer
+                        // Clear state and confirm to the customer
                         cache.Remove(stateKey);
                         await sender.SendTextAsync(from, "Comprobante recibido ✅ Lo estamos verificando.");
                         break;
