@@ -1,6 +1,7 @@
 using ComprobanteRDAPI.Data;
 using ComprobanteRDAPI.Models;
 using ComprobanteRDAPI.Services;
+using ComprobanteRDAPI.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+    });
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ComprobanteRD API", Version = "v1" });
