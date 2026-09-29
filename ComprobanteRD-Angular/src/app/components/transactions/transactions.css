@@ -33,3 +33,27 @@
   background-color: #0c9488 !important;
   color: white;
 }
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+
+  &.pending {
+    background-color: #fef3c7;
+    color: #b45309;
+  }
+
+  &.approved {
+    background-color: #d1fae5;
+    color: #047857;
+  }
+
+  &.rejected {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+}

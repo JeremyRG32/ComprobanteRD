@@ -49,7 +49,11 @@
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Estado</th>
-      <td mat-cell *matCellDef="let t">{{ t.status }}</td>
+      <td mat-cell *matCellDef="let t">
+        <span class="status-badge" [ngClass]="t.status.toLowerCase()">
+          {{ getStatusLabel(t.status) }}
+        </span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="acciones">

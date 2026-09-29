@@ -55,6 +55,16 @@ export class Transactions implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
+  statusMap: Record<string, string> = {
+    Pending: 'Pendiente',
+    Approved: 'Confirmado',
+    Rejected: 'Rechazado',
+  };
+
+  getStatusLabel(status: string): string {
+    return this.statusMap[status] || status;
+  }
+
   form = this.fb.group({
     name: '',
     date: null as Date | null,
