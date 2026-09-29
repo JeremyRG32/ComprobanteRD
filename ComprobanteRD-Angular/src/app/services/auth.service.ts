@@ -23,6 +23,18 @@ export class AuthService {
   private readonly Expiration = 'token_expiration';
   private readonly CompanyId = 'company_id';
 
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    const expiration = localStorage.getItem(this.Expiration);
+
+    if (!token || !expiration) {
+      return false;
+    }
+
+    const isExpired = new Date(expiration).getTime() <= Date.now();
+    return !isExpired;
+  }
+
   login(credentials: LoginDTO): Observable<AuthResponseDTO> {
     return this.http
       .post<AuthResponseDTO>(`${this.baseURL}/login`, credentials)
@@ -52,8 +64,6 @@ export class AuthService {
     console.log('Raw Token:', token);
 
     const decoded = this.getDecodedToken();
-    console.log('Decoded Payload:', decoded);
-
     if (!decoded) return null;
 
     return (
