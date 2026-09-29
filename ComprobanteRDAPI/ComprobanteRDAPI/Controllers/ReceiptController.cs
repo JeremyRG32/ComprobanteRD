@@ -1,6 +1,7 @@
 ﻿using ComprobanteRDAPI.Data;
 using ComprobanteRDAPI.DTOs;
 using ComprobanteRDAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet("{voucherId}")]
+        [Authorize]
         public async Task<IActionResult> GetDataByVoucher(int voucherId)
         {
             var companyId = GetCompanyId();
@@ -64,6 +66,7 @@ namespace ComprobanteRDAPI.Controllers
 
         [HttpPost("{voucherId}/pdf")]
         [RequestSizeLimit(5_000_000)]
+        [Authorize]
         public async Task<IActionResult> UploadPdf(int voucherId, IFormFile file)
         {
             var companyId = GetCompanyId();

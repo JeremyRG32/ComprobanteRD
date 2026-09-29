@@ -1,5 +1,6 @@
 ﻿using ComprobanteRDAPI.Data;
 using ComprobanteRDAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<CustomerDirectoryDTO>>> GetAll()
         {
             int companyId = GetCompanyId();

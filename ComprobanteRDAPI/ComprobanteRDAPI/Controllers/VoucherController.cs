@@ -2,6 +2,7 @@
 using ComprobanteRDAPI.DTOs;
 using ComprobanteRDAPI.Models;
 using ComprobanteRDAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,12 +35,13 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DashboardDTO>>> GetAll()
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<DashboardDTO>>> GetDashboard()
         {
             int companyId = GetCompanyId();
 
             var vouchers = await context.Vouchers
-                .Where(v => v.CompanyId == companyId && v.Status != "Approved")
+                .Where(v => v.CompanyId == companyId)
                 .OrderByDescending(v => v.SentAt)
                 .Select(v => new DashboardDTO
                 {
@@ -55,6 +57,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<VoucherDTO>> GetById(int id)
         {
             int companyId = GetCompanyId();
@@ -83,6 +86,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpGet("transactions")]
+        [Authorize]
         public async Task<ActionResult<TransactionHistoryDTO>> GetTransactions()
         {
             int companyId = GetCompanyId();
@@ -105,6 +109,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpPost("{id}/confirm")]
+        [Authorize]
         public async Task<IActionResult> Confirm(int id, ConfirmVoucherDTO confirmVoucherDTO)
         {
             int companyId = GetCompanyId();
@@ -152,6 +157,7 @@ namespace ComprobanteRDAPI.Controllers
         }
 
         [HttpPost("{id}/reject")]
+        [Authorize]
         public async Task<IActionResult> Reject(int id, RejectVoucherDTO dto)
         {
             int companyId = GetCompanyId();
