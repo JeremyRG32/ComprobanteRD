@@ -61,7 +61,6 @@ export class AuthService {
   // Access the name claim specifically
   getUserFullName(): string | null {
     const token = this.getToken();
-    console.log('Raw Token:', token);
 
     const decoded = this.getDecodedToken();
     if (!decoded) return null;

@@ -57,11 +57,19 @@
     </ng-container>
 
     <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef>Acciónes</th>
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
       <td mat-cell *matCellDef="let t">
         <div class="buttons">
           <button (click)="seeVoucher(t.voucherId)" matButton="outlined">Ver Comprobante</button>
-          <button (click)="seeReceipt(t.voucherId)" class="confirm" matButton="filled">
+
+          <button
+            (click)="seeReceipt(t.voucherId)"
+            class="confirm"
+            matButton="filled"
+            [disabled]="
+              t.status?.toLowerCase() === 'rejected' || t.estado?.toLowerCase() === 'rechazado'
+            "
+          >
             Ver Recibo
           </button>
         </div>

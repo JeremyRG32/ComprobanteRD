@@ -100,7 +100,7 @@ export class Voucher implements OnInit {
   declinePayment(rejectVoucherDTO: RejectVoucherDTO): void {
     this.voucherService.rejectVoucher(this.id, rejectVoucherDTO).subscribe({
       next: () => {
-        this.router.navigate(['/receipt/', this.id]);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         const error = getErrors(err);
