@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { VoucherService } from '../../services/voucher.service';
 import { VoucherDTO } from '../../models/voucher';
 import { RouterLink } from '@angular/router';
 import { isToday } from 'date-fns';
+import { Subscription, switchMap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,8 +15,8 @@ import { isToday } from 'date-fns';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
-  constructor() {
+export class Dashboard implements OnInit {
+  ngOnInit(): void {
     this.loadVouchers();
   }
 
@@ -29,8 +30,10 @@ export class Dashboard {
     return this.statusMap[status] || status;
   }
 
+  private cdr = inject(ChangeDetectorRef);
+  private pollingSub?: Subscription;
   private voucherService = inject(VoucherService);
-  displayedColumns: string[] = ['sentAt', 'customer', 'amount', 'status', 'accion'];
+  displayedColumns: string[] = ['sentAt', 'customer', 'status', 'accion'];
 
   vouchers: VoucherDTO[] = [];
   table: VoucherDTO[] = [];
@@ -61,13 +64,18 @@ export class Dashboard {
   }
 
   loadVouchers(): void {
-    this.voucherService.getVouchers().subscribe({
-      next: (data) => {
-        this.vouchers = data;
-        this.loadCards();
-        this.loadTable();
-      },
-      error: (err) => {},
-    });
+    // 0 = immediate first fetch
+    // 10000 = re-fetch every 10 seconds
+    this.pollingSub = timer(0, 10000)
+      .pipe(switchMap(() => this.voucherService.getVouchers()))
+      .subscribe({
+        next: (data) => {
+          this.vouchers = data;
+          this.loadCards();
+          this.loadTable();
+          this.cdr.detectChanges(); // Ensures Angular synchronizes the cards & table immediately
+        },
+        error: (err) => console.error('Error fetching vouchers:', err),
+      });
   }
 }
